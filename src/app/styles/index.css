@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.75rem;
+  --background: #ffffff;
+  --foreground: #161719;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #ffffff;
+  --popover-foreground: var(--foreground);
+  --primary: #0085ff;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f2;
+  --secondary-foreground: var(--foreground);
+  --muted: #f2f2f2;
+  --muted-foreground: #6d7175;
+  --accent: #e9f5ff;
+  --accent-foreground: var(--foreground);
+  --destructive: #c92a36;
+  --destructive-foreground: #ffffff;
+  --border: #eceef0;
+  --input: #d5d8dc;
+  --ring: var(--primary);
+  --chat-background: #8bc6f5;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #111214;
+  --foreground: #f5f5f7;
+  --card: #17181a;
+  --card-foreground: var(--foreground);
+  --popover: #17181a;
+  --popover-foreground: var(--foreground);
+  --primary: #0085ff;
+  --primary-foreground: #ffffff;
+  --secondary: #2b2c30;
+  --secondary-foreground: var(--foreground);
+  --muted: #2b2c30;
+  --muted-foreground: #a1a2aa;
+  --accent: #30313b;
+  --accent-foreground: var(--foreground);
+  --destructive: #ef6464;
+  --destructive-foreground: #111214;
+  --border: #26272b;
+  --input: #3b3c42;
+  --ring: var(--primary);
+  --chat-background: #111214;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: "Segoe UI", Arial, sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chat-background: var(--chat-background);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  :root {
+    font-family: var(--font-sans);
+    color: var(--foreground);
+    background: var(--background);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+}
