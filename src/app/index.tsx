@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useChatStore } from "@/entities/chat/store";
+import { useMessageStore } from "@/entities/message/store";
 import { ChatPage } from "@/pages/ChatPage";
 import { ConnectPage } from "@/pages/ConnectPage";
 import type { IAccountCredentials } from "@/shared/types/green-api";
@@ -11,6 +12,7 @@ export default function App() {
 
   function disconnect() {
     useChatStore.getState().resetChats();
+    useMessageStore.getState().resetMessages();
     setAccount(null);
   }
 
