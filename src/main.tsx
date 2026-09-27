@@ -1,6 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "@/app";
+import { RouterProvider } from "@/app/providers/router";
+import { ErrorBoundaryProvider } from "@/app/providers/error-boundary";
+import { ThemeProvider } from "@/shared/configs/theme";
 import "@/app/styles/index.css";
 
 const rootElement = document.getElementById("root");
@@ -11,6 +13,10 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <ErrorBoundaryProvider>
+      <ThemeProvider defaultTheme="light" storageKey="max-chat-theme">
+        <RouterProvider />
+      </ThemeProvider>
+    </ErrorBoundaryProvider>
   </StrictMode>,
 );

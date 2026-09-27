@@ -1,6 +1,5 @@
 import type { RegisterOptions } from "react-hook-form";
 import type { IAccountCredentials } from "@/shared/types/green-api";
-import { normalizeApiUrl } from "./helpers/normalizeApiUrl";
 
 export const ID_INSTANCE_RULES: RegisterOptions<
   IAccountCredentials,
@@ -21,7 +20,7 @@ export const API_TOKEN_RULES: RegisterOptions<
 };
 
 export const API_URL_RULES: RegisterOptions<IAccountCredentials, "apiUrl"> = {
-  setValueAs: normalizeApiUrl,
+  setValueAs: (value: string) => value.trim().replace(/\/+$/, ""),
   required: "Введите apiUrl",
   pattern: {
     value: /^https:\/\/(?:\d+\.api|api)\.green-api\.com$/,
