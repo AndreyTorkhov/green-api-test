@@ -1,12 +1,14 @@
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-export type Theme = "light" | "dark";
+export type TTheme = "dark" | "light" | "system";
 
-export interface ThemeContextValue {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+export interface IThemeContextValue {
+  theme: TTheme;
+  setTheme: Dispatch<SetStateAction<TTheme>>;
 }
 
-export interface ThemeProviderProps {
+export interface IThemeProviderProps {
   children: ReactNode;
+  defaultTheme?: TTheme;
+  storageKey?: string;
 }

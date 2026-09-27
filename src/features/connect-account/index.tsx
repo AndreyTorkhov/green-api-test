@@ -1,12 +1,16 @@
 import { LoaderCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
-import { useConnectAccount } from "./useConnectAccount";
-import type { ConnectAccountProps } from "./interfaces";
+import { FormField } from "@/shared/ui/form-field";
+import { useConnectAccount } from "./hooks/useConnectAccount";
+import type { IConnectAccountProps } from "./interfaces";
+import {
+  ID_INSTANCE_RULES,
+  API_TOKEN_RULES,
+  API_URL_RULES,
+} from "./validation";
 
-export function ConnectAccount({ onConnect }: ConnectAccountProps) {
+export function ConnectAccount({ onConnect }: IConnectAccountProps) {
   const { form, submit } = useConnectAccount({ onConnect });
   const { errors, isSubmitting } = form.formState;
 
@@ -19,88 +23,35 @@ export function ConnectAccount({ onConnect }: ConnectAccountProps) {
     >
       <fieldset disabled={isSubmitting} className="space-y-5">
         <legend className="sr-only">Учётные данные GREEN-API</legend>
-        <div className="space-y-2">
-          <Label htmlFor="idInstance">idInstance</Label>
-          <Input
-            id="idInstance"
-            inputMode="numeric"
-            autoComplete="off"
-            placeholder="Номер инстанса"
-            aria-invalid={!!errors.idInstance}
-            aria-describedby={
-              errors.idInstance ? "idInstance-error" : undefined
-            }
-            {...form.register("idInstance", {
-              setValueAs: (value: string) => value.trim(),
-              required: "Введите idInstance",
-              pattern: { value: /^\d+$/, message: "Введите только цифры" },
-            })}
-          />
-          {errors.idInstance && (
-            <p id="idInstance-error" className="text-sm text-destructive">
-              {errors.idInstance.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="apiTokenInstance">apiTokenInstance</Label>
-          <Input
-            id="apiTokenInstance"
-            type="password"
-            autoComplete="off"
-            spellCheck={false}
-            placeholder="Ключ доступа"
-            aria-invalid={!!errors.apiTokenInstance}
-            aria-describedby={
-              errors.apiTokenInstance ? "apiTokenInstance-error" : undefined
-            }
-            {...form.register("apiTokenInstance", {
-              setValueAs: (value: string) => value.trim(),
-              required: "Введите apiTokenInstance",
-              pattern: {
-                value: /^\S+$/,
-                message: "Токен не должен содержать пробелы",
-              },
-            })}
-          />
-          {errors.apiTokenInstance && (
-            <p id="apiTokenInstance-error" className="text-sm text-destructive">
-              {errors.apiTokenInstance.message}
-            </p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="apiUrl">apiUrl</Label>
-          <Input
-            id="apiUrl"
-            type="url"
-            autoComplete="off"
-            spellCheck={false}
-            aria-invalid={!!errors.apiUrl}
-            aria-describedby={
-              errors.apiUrl ? "apiUrl-hint apiUrl-error" : "apiUrl-hint"
-            }
-            {...form.register("apiUrl", {
-              setValueAs: (value: string) => value.trim().replace(/\/$/, ""),
-              required: "Введите apiUrl",
-              pattern: {
-                value: /^https:\/\/(?:\d+\.api|api)\.green-api\.com$/,
-                message: "Укажите HTTPS-адрес API из кабинета GREEN-API",
-              },
-            })}
-          />
-          <p
-            id="apiUrl-hint"
-            className="text-xs leading-5 text-muted-foreground"
-          >
-            Адрес API из настроек вашего инстанса в GREEN-API.
-          </p>
-          {errors.apiUrl && (
-            <p id="apiUrl-error" className="text-sm text-destructive">
-              {errors.apiUrl.message}
-            </p>
-          )}
-        </div>
+        <FormField
+          id="idInstance"
+          label="idInstance"
+          inputMode="numeric"
+          autoComplete="off"
+          placeholder="Номер инстанса"
+          error={errors.idInstance?.message}
+          {...form.register("idInstance", ID_INSTANCE_RULES)}
+        />
+        <FormField
+          id="apiTokenInstance"
+          label="apiTokenInstance"
+          type="password"
+          autoComplete="off"
+          spellCheck={false}
+          placeholder="Ключ доступа"
+          error={errors.apiTokenInstance?.message}
+          {...form.register("apiTokenInstance", API_TOKEN_RULES)}
+        />
+        <FormField
+          id="apiUrl"
+          label="apiUrl"
+          type="url"
+          autoComplete="off"
+          spellCheck={false}
+          error={errors.apiUrl?.message}
+          hint="Адрес API из настроек вашего инстанса в GREEN-API."
+          {...form.register("apiUrl", API_URL_RULES)}
+        />
       </fieldset>
       {errors.root && (
         <Alert variant="destructive">
@@ -113,7 +64,7 @@ export function ConnectAccount({ onConnect }: ConnectAccountProps) {
         )}
         {isSubmitting ? "Подключение…" : "Подключить"}
       </Button>
-      <p className="text-center text-xs leading-5 text-muted-foreground">
+      <p className="text-center text-xs text-muted-foreground">
         Учётные данные действуют до выхода или перезагрузки страницы.
       </p>
     </form>

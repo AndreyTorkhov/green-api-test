@@ -1,19 +1,20 @@
 import { useEffect, useRef, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
-import type { Maybe } from "@/shared/types/maybe";
-import { getStateInstance } from "./api";
-import { DEFAULT_CREDENTIALS } from "./constants";
-import type { AccountCredentials, ConnectAccountProps } from "./interfaces";
+import type { TMaybe } from "@/shared/types/maybe";
+import { getStateInstance } from "../api";
+import { DEFAULT_CREDENTIALS } from "../constants";
+import type { IAccountCredentials } from "@/shared/types/green-api";
+import type { IConnectAccountProps } from "../interfaces";
 
-export function useConnectAccount({ onConnect }: ConnectAccountProps) {
-  const requestRef = useRef<Maybe<AbortController>>(null);
-  const form = useForm<AccountCredentials>({
+export function useConnectAccount({ onConnect }: IConnectAccountProps) {
+  const requestRef = useRef<TMaybe<AbortController>>(null);
+  const form = useForm<IAccountCredentials>({
     defaultValues: DEFAULT_CREDENTIALS,
   });
 
   useEffect(() => () => requestRef.current?.abort(), []);
 
-  async function connectAccount(credentials: AccountCredentials) {
+  async function connectAccount(credentials: IAccountCredentials) {
     if (requestRef.current) {
       return;
     }
@@ -22,7 +23,10 @@ export function useConnectAccount({ onConnect }: ConnectAccountProps) {
     requestRef.current = controller;
 
     try {
-      const { data } = await getStateInstance(credentials, controller.signal);
+      const { data } = await getStateInstance({
+        account: credentials,
+        signal: controller.signal,
+      });
 
       if (controller.signal.aborted) {
         return;

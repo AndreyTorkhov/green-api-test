@@ -1,27 +1,37 @@
+import { CreateChat } from "@/features/create-chat";
 import { ChatSidebar } from "@/widgets/chat-sidebar";
-import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
-import type { ChatPageProps } from "./interfaces";
+import { Conversation } from "@/widgets/conversation";
+import { cn } from "@/shared/lib/utils";
+import type { IChatPageProps } from "./interfaces";
+import { useChatStore } from "@/entities/chat/store";
 
-export function ChatPage({ idInstance, onDisconnect }: ChatPageProps) {
+export function ChatPage(props: IChatPageProps) {
+  const { account, onDisconnect } = props;
+  const { chatList, activeChatId, openChat, closeChat } = useChatStore();
+  const activeChat =
+    chatList.find((chat) => chat.chatId === activeChatId) ?? null;
+
   return (
-    <main className="grid min-h-dvh grid-rows-[auto_1fr] md:grid-cols-[320px_1fr] md:grid-rows-1 lg:grid-cols-[380px_1fr]">
-      <ChatSidebar idInstance={idInstance} onDisconnect={onDisconnect} />
-      <section
-        aria-label="Переписка"
-        className="flex min-w-0 items-center justify-center bg-chat-background px-6 py-16"
-      >
-        <div className="max-w-sm rounded-3xl bg-card p-8 text-center text-card-foreground">
-          <Avatar className="mx-auto mb-6 size-20 rounded-3xl">
-            <AvatarFallback className="rounded-3xl bg-primary text-2xl font-bold text-primary-foreground">
-              MAX
-            </AvatarFallback>
-          </Avatar>
-          <h1 className="text-2xl font-semibold">Сообщения MAX</h1>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            Здесь появится переписка после создания первого чата.
-          </p>
-        </div>
-      </section>
+    <main className="grid h-dvh overflow-hidden md:grid-cols-[320px_minmax(0,1fr)] lg:grid-cols-[380px_minmax(0,1fr)]">
+      <div className={cn("min-h-0 min-w-0", activeChat && "hidden md:block")}>
+        <ChatSidebar
+          idInstance={account.idInstance}
+          chatList={chatList}
+          activeChatId={activeChat?.chatId ?? null}
+          onSelectChat={openChat}
+          onDisconnect={onDisconnect}
+          createChatAction={
+            <CreateChat
+              account={account}
+              chatList={chatList}
+              onSelectChat={openChat}
+            />
+          }
+        />
+      </div>
+      <div className={cn("min-h-0 min-w-0", !activeChat && "hidden md:block")}>
+        <Conversation chat={activeChat} onBack={closeChat} />
+      </div>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { ConnectAccount } from "@/features/connect-account";
 import { ThemeToggle } from "@/features/theme-toggle";
-import type { ConnectPageProps } from "./interfaces";
+import type { IConnectPageProps } from "./interfaces";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/shared/ui/card";
 
-export function ConnectPage({ onConnect }: ConnectPageProps) {
+export function ConnectPage({ onConnect }: IConnectPageProps) {
   return (
     <main className="flex min-h-dvh flex-col bg-chat-background p-4 sm:p-6">
       <div className="flex justify-end">

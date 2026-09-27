@@ -1,14 +1,14 @@
 import { api } from "@/shared/configs/axios";
 import type {
-  AccountCredentials,
-  GetStateInstanceResponse,
+  IGetStateInstanceParams,
+  IGetStateInstanceResponse,
 } from "./interfaces";
 
-export function getStateInstance(
-  { apiUrl, idInstance, apiTokenInstance }: AccountCredentials,
-  signal: AbortSignal,
-) {
-  return api.get<GetStateInstanceResponse>(
+export function getStateInstance(params: IGetStateInstanceParams) {
+  const { account, signal } = params;
+  const { apiUrl, idInstance, apiTokenInstance } = account;
+
+  return api.get<IGetStateInstanceResponse>(
     `${apiUrl}/v3/waInstance${encodeURIComponent(idInstance)}/getStateInstance/${encodeURIComponent(apiTokenInstance)}`,
     { signal },
   );

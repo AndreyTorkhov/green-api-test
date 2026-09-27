@@ -1,22 +1,38 @@
-import { useLayoutEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { ThemeContext } from "./context";
-import type { Theme, ThemeProviderProps } from "./interfaces";
-import { readTheme, saveTheme } from "./storage";
+import type { TTheme, IThemeProviderProps } from "./interfaces";
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState(readTheme);
+export function ThemeProvider(props: IThemeProviderProps) {
+  const {
+    children,
+    defaultTheme = "system",
+    storageKey = "vite-ui-theme",
+  } = props;
+  const [theme, setThemeState] = useState<TTheme>(
+    () => (localStorage.getItem(storageKey) as TTheme) || defaultTheme,
+  );
 
-  useLayoutEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", theme === "dark" ? "#17181a" : "#ffffff");
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+      root.classList.add(systemTheme);
+      return;
+    }
+
+    root.classList.add(theme);
   }, [theme]);
 
-  function setTheme(nextTheme: Theme) {
-    setThemeState(nextTheme);
-    saveTheme(nextTheme);
-  }
+  const setTheme: Dispatch<SetStateAction<TTheme>> = (value) => {
+    const newTheme = typeof value === "function" ? value(theme) : value;
+    localStorage.setItem(storageKey, newTheme);
+    setThemeState(newTheme);
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

@@ -1,6 +1,9 @@
 import { createContext } from "react";
-import type { ThemeContextValue } from "./interfaces";
+import type { IThemeContextValue } from "./interfaces";
 
-export const ThemeContext = createContext<ThemeContextValue | undefined>(
-  undefined,
-);
+const initialState: IThemeContextValue = {
+  theme: "system",
+  setTheme: () => null,
+};
+
+export const ThemeContext = createContext<IThemeContextValue>(initialState);

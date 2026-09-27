@@ -1,39 +1,51 @@
-import { Separator } from "@/shared/ui/separator";
 import { ThemeToggle } from "@/features/theme-toggle";
-import { LogOut } from "lucide-react";
-import { Button } from "@/shared/ui/button";
-import type { ChatSidebarProps } from "./interfaces";
+import { Separator } from "@/shared/ui/separator";
+import { AccountFooter } from "./components/account-footer";
+import { ChatListItem } from "./components/chat-list-item";
+import { EmptyChatList } from "./components/empty-chat-list";
+import type { IChatSidebarProps } from "./interfaces";
 
-export function ChatSidebar({ idInstance, onDisconnect }: ChatSidebarProps) {
+export function ChatSidebar(props: IChatSidebarProps) {
+  const {
+    idInstance,
+    chatList,
+    activeChatId,
+    createChatAction,
+    onSelectChat,
+    onDisconnect,
+  } = props;
+
   return (
     <aside
       aria-label="Список чатов"
-      className="flex flex-col border-b border-border bg-card md:border-r md:border-b-0"
+      className="flex h-full min-h-0 flex-col border-r bg-card"
     >
-      <header className="flex items-center justify-between px-6 py-5">
-        <h2 className="text-2xl font-semibold">Чаты</h2>
-        <ThemeToggle />
+      <header className="flex items-center justify-between px-5 py-4">
+        <h1 className="text-2xl font-semibold">Чаты</h1>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          {createChatAction}
+        </div>
       </header>
       <Separator />
-      <div className="flex flex-1 items-center justify-center px-6 py-10">
-        <div className="max-w-64 text-center">
-          <p className="font-medium">Пока нет чатов</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Здесь появятся ваши чаты.
-          </p>
-        </div>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {chatList.length === 0 ? (
+          <EmptyChatList />
+        ) : (
+          <ul aria-label="Чаты" className="py-2">
+            {chatList.map((chat) => (
+              <ChatListItem
+                key={chat.chatId}
+                chat={chat}
+                active={chat.chatId === activeChatId}
+                onSelect={onSelectChat}
+              />
+            ))}
+          </ul>
+        )}
       </div>
       <Separator />
-      <footer className="flex items-center justify-between gap-2 p-4">
-        <div className="min-w-0 text-sm">
-          <p className="font-medium">Аккаунт подключён</p>
-          <p className="truncate text-muted-foreground">{idInstance}</p>
-        </div>
-        <Button type="button" variant="ghost" onClick={onDisconnect}>
-          <LogOut aria-hidden="true" />
-          Выйти
-        </Button>
-      </footer>
+      <AccountFooter idInstance={idInstance} onDisconnect={onDisconnect} />
     </aside>
   );
 }

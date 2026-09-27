@@ -1,13 +1,14 @@
-export interface AccountCredentials {
-  apiUrl: string;
-  idInstance: string;
-  apiTokenInstance: string;
+import type { IAccountCredentials } from "@/shared/types/green-api";
+
+export interface IConnectAccountProps {
+  onConnect: (credentials: IAccountCredentials) => void;
 }
 
-export interface ConnectAccountProps {
-  onConnect: (credentials: AccountCredentials) => void;
-}
-
-export interface GetStateInstanceResponse {
+export interface IGetStateInstanceResponse {
   stateInstance: string;
+}
+
+export interface IGetStateInstanceParams {
+  account: IAccountCredentials;
+  signal: AbortSignal;
 }

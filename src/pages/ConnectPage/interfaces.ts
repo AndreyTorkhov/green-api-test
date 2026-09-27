@@ -1,5 +1,5 @@
-import type { AccountCredentials } from "@/features/connect-account/interfaces";
+import type { IAccountCredentials } from "@/shared/types/green-api";
 
-export interface ConnectPageProps {
-  onConnect: (credentials: AccountCredentials) => void;
+export interface IConnectPageProps {
+  onConnect: (credentials: IAccountCredentials) => void;
 }
